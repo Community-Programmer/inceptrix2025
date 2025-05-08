@@ -373,7 +373,7 @@ const refreshToken = async (
 
         const { accessToken } = generateTokens(user.id);
 
-        res.json({ accessToken });
+        res.json({ accessToken , user: user.username});
       }
     );
   } catch (error) {
