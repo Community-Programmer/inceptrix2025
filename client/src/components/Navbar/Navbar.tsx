@@ -1,98 +1,145 @@
-import React from "react";
+import { Menu } from "lucide-react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Crown, Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Link } from "react-router-dom";
+import hext1 from "../../assets/next-hire.png";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
-const Navbar: React.FC = () => {
+interface NavLink {
+  href: string;
+  label: string;
+}
+
+const navLinks: NavLink[] = [
+  { href: "/", label: "Home" },
+  { href: "/interview", label: "Mock Interview" },
+  { href: "/interview-help", label: "Interview AI Assistant" },
+  { href: "/placementprep", label: "Prepare" },
+  { href: "/resume", label: "Resume Evaluator" },
+  { href: "/pdf-chat", label: "Pdf Chat" },
+  { href: "/code-prep", label: "Code Prep" }
+];
+
+export default function Navbar() {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
+  const user = useSelector((state: RootState) => state.auth.user);
+
   return (
-    <>
-      <nav className="bg-white shadow-md">
-        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-8 w-8 text-blue-600"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-              />
-            </svg>
-            <h1 className="text-xl font-bold text-gray-800">Next Hire</h1>
+    <header className="w-full font-sans">
+      {/* Top Bar */}
+      <div className="flex flex-col sm:flex-row items-center justify-between bg-white px-4 py-4 sm:py-3 text-foreground md:px-8 border-b border-gray-200">
+        <Link className="flex-shrink-0 mb-2 sm:mb-0" to="/">
+          <img
+            src={hext1}
+            alt="PlacementPilot"
+            width={200}
+            height={60}
+          />
+        </Link>
+        <div className="w-full px-2 sm:px-4 md:px-8 overflow-hidden">
+          <div className="relative overflow-hidden group">
+            <div className="animate-marquee whitespace-nowrap group-hover:pause">
+              <span className="inline-block mx-4">
+                Hi, Welcome to Our Project! Revolutionizing Placement
+                Preparation with AI-Powered Personalized Training, Tailored
+                Roadmaps, and Realistic Simulations for Your Success.
+              </span>
+            </div>
           </div>
-          <div className="hidden md:flex items-center space-x-6">
-            <Link to="/" className="text-gray-600 hover:text-gray-800">
-              Home
-            </Link>
-            <Link to="/Features" className="text-gray-600 hover:text-gray-800">
-              Features
-            </Link>
-            <Link to="/About" className="text-gray-600 hover:text-gray-800">
-              About
-            </Link>
-            <Link
-              to="/Premium"
-              className="text-gray-600 hover:text-gray-800 flex items-center"
-            >
-              Premium
-              <Crown className="ml-1 h-4 w-4 text-yellow-500" />
-            </Link>
+        </div>
+        {!isLoggedIn && (
+        <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-sm mt-2 sm:mt-0">
+          <div className="ml-auto flex-1 sm:flex-initial">
+            <div className="flex gap-3 relative">
+              <Link to="/signup">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="ml-auto gap-1.5 text-sm"
+                >
+                  Sign Up
+                </Button>
+              </Link>
+              <Link to="/login">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="ml-auto gap-1.5 text-sm"
+                >
+                  Sign In
+                </Button>
+              </Link>
+            </div>
           </div>
-          <div className="hidden md:flex items-center space-x-2">
-            <Link to="/login">
-              <Button variant="outline">Log In</Button>
-            </Link>
-            <Link to="/signup">
-              <Button>Sign Up</Button>
-            </Link>
+        </div>)}
+        {isLoggedIn && (<div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-sm mt-2 sm:mt-0">
+          <div className="ml-auto flex-1 sm:flex-initial">
+          <div className="flex gap-3 relative">
+          <span className="font-bold">Logined as: {user}</span>
           </div>
-          <Sheet>
+          </div>
+          </div>)}
+      </div>
+      {/* Main Navigation */}
+      <nav className="bg-background px-4 py-3 md:px-6 lg:px-8 shadow-[0_4px_6px_-1px_rgba(0,0,255,0.1)]">
+        <div className="flex items-center justify-between">
+          {/* Mobile Menu Button */}
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
-              <Button variant="outline" size="icon" className="md:hidden">
+              <Button className="md:hidden mr-2" variant="outline" size="icon">
                 <Menu className="h-6 w-6" />
-                <span className="sr-only">Toggle menu</span>
+                <span className="sr-only">Toggle navigation menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right">
-              <div className="flex flex-col space-y-4">
-                <Link to="/" className="text-gray-600 hover:text-gray-800">
-                  Home
-                </Link>
-                <Link
-                  to="/Features"
-                  className="text-gray-600 hover:text-gray-800"
-                >
-                  Features
-                </Link>
-                <Link to="/About" className="text-gray-600 hover:text-gray-800">
-                  About
-                </Link>
-                <Link
-                  to="/Premium"
-                  className="text-gray-600 hover:text-gray-800 flex items-center"
-                >
-                  Premium
-                  <Crown className="ml-1 h-4 w-4 text-yellow-500" />
-                </Link>
-                <Link to="/Login">
-                  <Button variant="outline">Log In</Button>
-                </Link>
-                <Link to="/SignUp">
-                  <Button>Sign Up</Button>
-                </Link>
-              </div>
+            <SheetContent side="left">
+              <nav className="grid gap-2 py-6">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    className="block rounded-lg px-3 py-2 text-lg font-medium hover:bg-accent hover:text-accent-foreground"
+                    to={link.href}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </nav>
             </SheetContent>
           </Sheet>
+
+          {/* Desktop Navigation */}
+          <div className="hidden w-full justify-center items-center space-x-4 md:flex lg:space-x-8">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                className="text-base font-medium text-foreground transition-colors hover:text-primary"
+                to={link.href}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
         </div>
       </nav>
-    </>
+      <style jsx>{`
+        @keyframes marquee {
+          0% {
+            transform: translateX(100%);
+          }
+          100% {
+            transform: translateX(-100%);
+          }
+        }
+        .animate-marquee {
+          animation: marquee 20s linear infinite;
+        }
+        .group:hover .group-hover\\:pause {
+          animation-play-state: paused;
+        }
+      `}</style>
+    </header>
   );
-};
-
-export default Navbar;
+}
