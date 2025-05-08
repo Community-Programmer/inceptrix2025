@@ -19,11 +19,13 @@ bucket_name = os.getenv("BUCKET_NAME")
 async def entrypoint(ctx: agents.JobContext):
     await ctx.connect()
 
+    print(ctx.room)
+
     req = api.RoomCompositeEgressRequest(
         room_name=ctx.room.name,
         file_outputs=[api.EncodedFileOutput(
             file_type=api.EncodedFileType.MP4,
-            filepath="my-room-test.mp4",
+            filepath=f"{ctx.room.name}-video.mp4",
             s3=api.S3Upload(
                 bucket=bucket_name,
                 region=aws_region,

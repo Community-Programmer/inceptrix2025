@@ -14,7 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import axios from "axios";
+import api from "@/config/axiosInstance";
 
 const jobRoles = [
   "Software Engineer",
@@ -27,7 +27,7 @@ const jobRoles = [
   "Product Manager",
 ];
 
-const models = ["GPT-4", "GPT-3.5", "Claude-2", "Gemini Pro"];
+const models = ["Ege", "Awais", "Andre", "Zaid"];
 
 const InterviewHelp = () => {
   const navigate = useNavigate();
@@ -58,7 +58,8 @@ const InterviewHelp = () => {
       setLoading(true);
       setError("");
 
-      const response = await axios.post("http://localhost:5050/api/v1/interview/createinterview", formData);
+  
+      const response = await api.post("http://localhost:5050/api/v1/interview/createinterview", formData);
 
       console.log("Interview created:", response.data);
       navigate("/your-interviews");

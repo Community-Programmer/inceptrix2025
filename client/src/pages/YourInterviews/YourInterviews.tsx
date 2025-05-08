@@ -5,10 +5,9 @@ import { Button } from "@/components/ui/button";
 import { PlayCircle, FileText } from "lucide-react";
 import {
   encodePassphrase,
-  generateRoomId,
   randomString,
 } from "@/lib/client-utils";
-import axios from "axios";
+import api from "@/config/axiosInstance";
 
 const YourInterviews = () => {
   const navigate = useNavigate();
@@ -20,7 +19,7 @@ const YourInterviews = () => {
   useEffect(() => {
     const fetchInterviews = async () => {
       try {
-        const response = await axios.get("http://localhost:5050/api/v1/interview/getinterviews"); // Adjust path if needed
+        const response = await api.get("http://localhost:5050/api/v1/interview/getinterviews");
         setInterviews(response.data);
       } catch (error) {
         console.error("Failed to fetch interviews:", error);
@@ -32,13 +31,13 @@ const YourInterviews = () => {
     fetchInterviews();
   }, []);
 
-  const startMeeting = () => {
+  const startMeeting = (interviewId: string) => {
     if (e2ee) {
       navigate(
-        `/interview/${generateRoomId()}#${encodePassphrase(sharedPassphrase)}`
+        `/interview/${interviewId}#${encodePassphrase(sharedPassphrase)}`
       );
     } else {
-      navigate(`/interview/${generateRoomId()}`);
+      navigate(`/interview/${interviewId}`);
     }
   };
 
@@ -56,7 +55,7 @@ const YourInterviews = () => {
               <CardTitle className="flex justify-between items-center">
                 <span>{interview.title}</span>
                 <span className="text-sm font-normal text-gray-500">
-                  {interview.date || "Date not set"}
+                  {interview.createdAt || "Date not set"}
                 </span>
               </CardTitle>
             </CardHeader>
@@ -97,7 +96,7 @@ const YourInterviews = () => {
                   )}
                 </div>
                 <div className="flex gap-4 pt-4">
-                  <Button className="flex-1" onClick={startMeeting}>
+                  <Button className="flex-1" onClick={()=>startMeeting(interview.id)}>
                     <PlayCircle className="w-4 h-4 mr-2" />
                     Start
                   </Button>
