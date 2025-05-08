@@ -20,6 +20,7 @@ import PasswordResetForm from "./pages/ForgotPassword/PasswordResetForm";
 import SmartWhiteboard from "./components/SmartWhiteboard/SmartWhiteboard";
 import Roadmaps from "./pages/Roadmaps/Roadmaps";
 import InterviewQues from "./pages/InterviewQues/InterviewQues";
+import Interview from "./pages/AI_Interview/Interview";
 
 const mainLayoutRoutes = [
   {
@@ -38,15 +39,15 @@ const mainLayoutRoutes = [
   {
     path: "/Premium",
     element: <Premium />,
+  },{
+    path: "/profile",
+    element: <Profile />,
   },
   {
     path: "/Whiteboard",
     element: <SmartWhiteboard />,
-  },
-  {
-    path: "/profile",
-    element: <Profile />,
-  },
+  }
+  ,
   {
     path: "/interview-help",
     element: <InterviewHelp />,
@@ -109,6 +110,10 @@ const router = createBrowserRouter([
         path: "/reset-password/:resetToken",
         element: <PasswordResetForm />,
       },
+      {
+        path: "/interview/:interviewId",
+        element: <Interview/>
+      }
     ],
   },
 ]);
