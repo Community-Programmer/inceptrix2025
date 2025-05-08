@@ -169,7 +169,10 @@ export default function App() {
     }
     console.log(`[App] Connecting WS for clientId=${clientId}`);
     setStatus("connecting");
-    const ws = new WebSocket(`ws://localhost:8000/ws/${clientId}`);
+    // Update the WebSocket URL to match the new router path
+    const ws = new WebSocket(
+      `ws://localhost:8080/api/v1/whiteboard/ws/${clientId}`
+    );
     let pingIntervalId: ReturnType<typeof setInterval> | undefined = undefined;
 
     ws.onopen = () => {
@@ -474,7 +477,7 @@ export default function App() {
   }, [clientId]);
 
   // generateDiagram and clearCanvas methods (ensure they are correctly implemented as per previous suggestions)
-  const generateDiagram = async () => {
+  const generateDiagram = async (prompt: string) => {
     if (!prompt.trim() || isGenerating) {
       console.log(
         "[App] generateDiagram skipped (no prompt, or already generating)"
@@ -492,11 +495,15 @@ export default function App() {
     }
 
     try {
-      const res = await fetch("http://localhost:8000/generate-diagram", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt }),
-      });
+      // Update the fetch URL to match the new router path
+      const res = await fetch(
+        "http://localhost:8080/api/v1/whiteboard/generate-diagram",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt }),
+        }
+      );
       console.log("[App] HTTP POST /generate-diagram status:", res.status);
       const responseBodyText = await res.text();
       console.log("[App] HTTP POST response body:", responseBodyText);
@@ -571,13 +578,13 @@ export default function App() {
           <input
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && generateDiagram()}
+            onKeyDown={(e) => e.key === "Enter" && generateDiagram(prompt)}
             placeholder="Describe your diagram..."
             disabled={isGenerating || status === "connecting"}
             className="prompt-input"
           />
           <button
-            onClick={generateDiagram}
+            onClick={() => generateDiagram(prompt)}
             disabled={isGenerating || !prompt.trim() || status === "connecting"}
             className={`generate-button ${isGenerating ? "generating" : ""}`}
           >
