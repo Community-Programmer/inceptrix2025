@@ -8,3 +8,4 @@ langchain-google-genai
 langchain_community
 python-multipart
 faiss-cpu
+groq

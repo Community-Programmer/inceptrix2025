@@ -4,6 +4,7 @@ import os
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.routes.PdfChat import pdfchat
+from app.api.routes.SmartWhiteBoard import whiteboard
 
 load_dotenv()
 
@@ -22,7 +23,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(pdfchat.router, prefix="/api/v1/pdf-chat",tags=["pdfchat"])
+app.include_router(pdfchat.router, prefix="/api/v1/pdf-chat", tags=["pdfchat"])
+app.include_router(whiteboard.router, prefix="/api/v1/whiteboard", tags=["whiteboard"])
 
 
 @app.get("/")
