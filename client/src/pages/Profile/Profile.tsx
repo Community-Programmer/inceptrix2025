@@ -5,15 +5,33 @@ import { FileUploader } from "@/components/FileUploader/FileUploader";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { CheckCircle, XCircle } from "lucide-react";
+import axios from "axios";
+
+const api = axios.create({
+  baseURL:'http://localhost:8000/api/v1',
+  headers:{
+      'Content-Type':'multipart/form-data'
+  },
+  withCredentials: true
+});
 
 const Profile = () => {
   const user = useSelector((state: RootState) => state.auth.user);
   const [isResumeUploaded, setIsResumeUploaded] = useState(false);
 
-  const handleFileUpload = (file: File) => {
-    // Handle file upload logic here
-    console.log("File uploaded:", file);
-    setIsResumeUploaded(true);
+  const handleFileUpload = async (file: File) => {
+    const formData = new FormData();
+    formData.append("resume", file);
+  
+    try {
+      const response = await api.post('/resume/upload-pdf',formData)
+  
+      console.log("Upload successful:", response.data);
+      setIsResumeUploaded(true);
+    } catch (error: any) {
+      console.error("Upload failed:", error.response?.data || error.message);
+      setIsResumeUploaded(false);
+    }
   };
 
   return (
