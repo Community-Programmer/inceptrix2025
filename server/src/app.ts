@@ -9,10 +9,16 @@ import passport from 'passport'
 import passportConfig from './config/passport';
 import authRouter from './auth/authRoute';
 import interviewRouter from './Interview/interviewRoute';
+import mongoose from 'mongoose';
+import industryRoutes from './Insights/industryRoutes';
 
 config();
 
 const app = express();
+mongoose.connect(process.env.DATABASE_URL || 'dfgh')
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('MongoDB connection error:', err));
+
 
 const server = http.createServer(app);
 
@@ -28,6 +34,8 @@ app.use(
     origin: process.env.FRONTEND_URL,
   })
 );
+
+app.use('/api/industry', industryRoutes);
 
 app.use(express.json());
 app.use(cookieParser());

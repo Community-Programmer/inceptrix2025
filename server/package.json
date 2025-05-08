@@ -30,6 +30,7 @@
     "typescript-eslint": "^8.11.0"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@prisma/client": "^5.22.0",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.7",
@@ -38,7 +39,7 @@
     "express": "^4.21.1",
     "http-errors": "^2.0.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.7.3",
+    "mongoose": "^8.14.2",
     "nodemailer": "^6.9.16",
     "passport": "^0.7.0",
     "passport-github2": "^0.1.12",
