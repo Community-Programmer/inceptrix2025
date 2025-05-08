@@ -32,7 +32,7 @@ import axios from 'axios';
   export const silentRefresh = createAsyncThunk('auth/silentRefresh', async (_, { dispatch }) => {
     try {
       const response = await axios.post('http://localhost:5050/api/v1/auth/refresh', {}, { withCredentials: true });
-      return response.data.accessToken;
+      return response.data;
     } catch (error) {
       dispatch(logout());
       throw error;
@@ -62,8 +62,9 @@ import axios from 'axios';
       });
       builder.addCase(silentRefresh.fulfilled, (state, action) => {
         state.isLoggedIn = true;
-        state.accessToken = action.payload;
+        state.accessToken = action.payload.accessToken;
         state.loading = false;
+        state.user = action.payload.user;
       });
       builder.addCase(silentRefresh.rejected, (state) => {
         state.loading = false;
