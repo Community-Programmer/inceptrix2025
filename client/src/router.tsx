@@ -22,6 +22,9 @@ import Roadmaps from "./pages/Roadmaps/Roadmaps";
 import InterviewQues from "./pages/InterviewQues/InterviewQues";
 import Interview from "./pages/AI_Interview/Interview";
 import ResumeEvaluate from "./pages/ResumeEvaluator/ResumeEvaluator";
+import IndustryInsights from "./components/Insights/IndustryInsights";
+import InsightHome from "./components/Insights/InsightHome";
+
 
 const mainLayoutRoutes = [
   {
@@ -69,6 +72,13 @@ const mainLayoutRoutes = [
     path: "/resume-evaluate",
     element: <ResumeEvaluate />,
   },
+  {
+    path: "/industry-insights",
+    element: <IndustryInsights />,
+  },{
+    path: "/insights",
+    element: <InsightHome />,
+  }
 ];
 
 const router = createBrowserRouter([
