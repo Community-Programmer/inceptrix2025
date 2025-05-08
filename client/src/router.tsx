@@ -18,6 +18,7 @@ import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import PasswordResetForm from "./pages/ForgotPassword/PasswordResetForm";
 
 import SmartWhiteboard from "./components/SmartWhiteboard/SmartWhiteboard";
+import Roadmaps from "./pages/Roadmaps/Roadmaps";
 
 const mainLayoutRoutes = [
   {
@@ -52,6 +53,10 @@ const mainLayoutRoutes = [
   {
     path: "/your-interviews",
     element: <YourInterviews />,
+  },
+  {
+    path: "/roadmaps",
+    element: <Roadmaps />,
   },
 ];
 
