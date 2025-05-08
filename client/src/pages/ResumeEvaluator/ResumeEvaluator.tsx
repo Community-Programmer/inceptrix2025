@@ -43,7 +43,7 @@ const ResumeEvaluate: React.FC = () => {
     try {
       setIsUploading(true);
       const response = await fetch(
-        "http://localhost:8080/api/v1/resume/evaluate-resume",
+        "http://localhost:8000/api/v1/resume/evaluate-resume",
         {
           method: "POST",
           body: formData,

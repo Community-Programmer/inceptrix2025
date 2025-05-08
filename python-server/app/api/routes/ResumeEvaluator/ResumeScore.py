@@ -105,126 +105,6 @@ async def test():
 
 import re
 
-def get_fallback_ats_evaluation():
-    return {
-        "overall_score": "7/10",
-        "sections": {
-            "contact_info": {
-                "status": "good",
-                "issues": ["No LinkedIn profile mentioned"],
-                "recommendations": ["Add your LinkedIn profile", "Consider adding a professional email address"]
-            },
-            "summary": {
-                "status": "acceptable",
-                "issues": ["Could be more specific to the role"],
-                "recommendations": ["Tailor your summary to the specific job role", "Include key achievements"]
-            },
-            "skills": {
-                "status": "good",
-                "issues": [],
-                "recommendations": ["Consider organizing skills by category", "Highlight most relevant skills first"]
-            },
-            "experience": {
-                "status": "good",
-                "issues": ["Dates could be more consistent"],
-                "recommendations": ["Use consistent date format", "Quantify achievements where possible"]
-            },
-            "education": {
-                "status": "good",
-                "issues": [],
-                "recommendations": ["Consider adding relevant coursework"]
-            },
-            "certifications": {
-                "status": "acceptable",
-                "issues": ["No recent certifications"],
-                "recommendations": ["Add any relevant certifications", "Consider pursuing role-specific certifications"]
-            }
-        },
-        "keyword_analysis": {
-            "matched_keywords": ["project management", "team leadership", "communication"],
-            "missing_keywords": ["agile", "scrum", "stakeholder management"],
-            "recommendations": ["Include more industry-specific keywords", "Add missing technical skills"]
-        },
-        "formatting_analysis": {
-            "readability_score": "good",
-            "font_consistency": "excellent",
-            "bullet_point_usage": "good",
-            "section_spacing": "acceptable",
-            "recommendations": ["Ensure consistent spacing between sections", "Use standard margins"]
-        },
-        "final_recommendations": [
-            "Tailor resume more specifically to the target role",
-            "Add more quantifiable achievements",
-            "Include relevant certifications",
-            "Add LinkedIn profile and professional social media links"
-        ]
-    }
-
-def get_fallback_normal_evaluation():
-    return {
-        "normal_evaluation": {
-            "overall_feedback": {
-                "tone": "Professional and clear",
-                "grammar_and_spelling": "Generally good with minor improvements needed",
-                "flow_and_readability": "Well-structured and easy to follow"
-            },
-            "strengths": [
-                "Clear presentation of experience",
-                "Good use of action verbs",
-                "Relevant skills highlighted",
-                "Professional formatting"
-            ],
-            "weaknesses": [
-                "Some achievements could be more specific",
-                "Technical skills section could be more detailed",
-                "Limited demonstration of soft skills"
-            ],
-            "detailed_feedback": {
-                "summary_section": {
-                    "feedback": "Good overview but could be more targeted",
-                    "suggestions": [
-                        "Add specific career objectives",
-                        "Highlight unique value proposition"
-                    ]
-                },
-                "experience_section": {
-                    "feedback": "Well-structured with clear responsibilities",
-                    "suggestions": [
-                        "Add more quantifiable achievements",
-                        "Include specific technologies used"
-                    ]
-                },
-                "skills_section": {
-                    "feedback": "Good range of technical skills",
-                    "suggestions": [
-                        "Group skills by category",
-                        "Add proficiency levels"
-                    ]
-                },
-                "education_section": {
-                    "feedback": "Clear and well-presented",
-                    "suggestions": [
-                        "Add relevant coursework",
-                        "Include academic achievements"
-                    ]
-                },
-                "certifications_section": {
-                    "feedback": "Basic information provided",
-                    "suggestions": [
-                        "Add dates of certification",
-                        "Include upcoming certifications"
-                    ]
-                }
-            },
-            "recommendations": [
-                "Add more industry-specific keywords",
-                "Include more quantifiable results",
-                "Enhance technical skills section",
-                "Add professional development section"
-            ]
-        }
-    }
-
 @router.post("/evaluate-resume")
 async def evaluate_resume(file: UploadFile = File(...)):
     logging.info('Received request to evaluate resume')
@@ -370,9 +250,7 @@ async def evaluate_resume(file: UploadFile = File(...)):
 
         except Exception as api_error:
             logging.error(f"API Error: {api_error}. Using fallback responses.")
-            # Use fallback responses if API fails
-            ats_evaluation = get_fallback_ats_evaluation()
-            normal_evaluation = get_fallback_normal_evaluation()
+
 
         return JSONResponse(content={
             "ats_evaluation": ats_evaluation,
@@ -383,6 +261,4 @@ async def evaluate_resume(file: UploadFile = File(...)):
         logging.error(f"Error during evaluation: {e}")
         # Even in case of processing error, return fallback responses
         return JSONResponse(content={
-            "ats_evaluation": get_fallback_ats_evaluation(),
-            "normal_evaluation": get_fallback_normal_evaluation()
         }, status_code=200)
