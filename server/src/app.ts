@@ -5,7 +5,9 @@ import cookieParser from 'cookie-parser';
 import http from 'http';
 import { Server } from 'socket.io';
 import globalErrorHandler from './middleware/globalErrorHandler';
-
+import passport from 'passport'
+import passportConfig from './config/passport';
+import authRouter from './auth/authRoute';
 
 config();
 
@@ -29,16 +31,19 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
+app.use(passport.initialize());
+passportConfig(passport);
 
 
 
 
 app.get('/', (req: Request, res: Response) => {
   res.json({
-    message: 'Welcome to EzyJot Express Backend',
+    message: 'Welcome to Next-Hire App Express Backend',
   });
 });
 
-app.use(globalErrorHandler);
+  app.use('/api/v1/auth', authRouter);
+  app.use(globalErrorHandler);
 
 export { server, io };
