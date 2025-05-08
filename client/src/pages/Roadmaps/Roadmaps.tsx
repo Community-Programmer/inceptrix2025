@@ -53,7 +53,7 @@ export default function Roadmaps() {
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      if (!user) return;
+     
 
       let query = supabase.from("roadmaps").select("*");
 
@@ -61,6 +61,7 @@ export default function Roadmaps() {
       if (activeTab === "my-roadmaps") {
         query = query.eq("user_id", user.id);
       }
+
 
       const { data, error } = await query.order("created_at", {
         ascending: false,
@@ -85,7 +86,7 @@ export default function Roadmaps() {
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      if (!user) throw new Error("No user found");
+      
 
       // Generate roadmap via GROQ
       const roadmapContent = await generateRoadmap(topic);
@@ -105,7 +106,7 @@ export default function Roadmaps() {
         description:
           roadmapContent.description || `Learning roadmap for ${topic}`,
         content: roadmapContent,
-        user_id: user.id,
+        
       });
 
       if (roadmapError) throw roadmapError;
