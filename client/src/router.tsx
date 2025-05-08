@@ -22,6 +22,7 @@ import Roadmaps from "./pages/Roadmaps/Roadmaps";
 import InterviewQues from "./pages/InterviewQues/InterviewQues";
 import Interview from "./pages/AI_Interview/Interview";
 import ResumeEvaluate from "./pages/ResumeEvaluator/ResumeEvaluator";
+import Results from "./pages/Results/Results";
 
 const mainLayoutRoutes = [
   {
@@ -68,6 +69,10 @@ const mainLayoutRoutes = [
   {
     path: "/resume-evaluate",
     element: <ResumeEvaluate />,
+  },
+  {
+    path: "your-interviews/interview/results/2bhy64gkj86489",
+    element: <Results />,
   },
 ];
 
