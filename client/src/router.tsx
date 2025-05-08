@@ -40,17 +40,17 @@ const mainLayoutRoutes = [
   {
     path: "/Premium",
     element: <Premium />,
-  },{
+  },
+  {
     path: "/profile",
     element: <Profile />,
   },
   {
     path: "/Whiteboard",
     element: <SmartWhiteboard />,
-  }
-  ,
+  },
   {
-    path: "/interview-help",
+    path: "/interview",
     element: <InterviewHelp />,
   },
   {
@@ -117,8 +117,8 @@ const router = createBrowserRouter([
       },
       {
         path: "/interview/:interviewId",
-        element: <Interview/>
-      }
+        element: <Interview />,
+      },
     ],
   },
 ]);
