@@ -21,6 +21,7 @@ import SmartWhiteboard from "./components/SmartWhiteboard/SmartWhiteboard";
 import Roadmaps from "./pages/Roadmaps/Roadmaps";
 import InterviewQues from "./pages/InterviewQues/InterviewQues";
 import Interview from "./pages/AI_Interview/Interview";
+import ResumeEvaluate from "./pages/ResumeEvaluator/ResumeEvaluator";
 
 const mainLayoutRoutes = [
   {
@@ -61,8 +62,12 @@ const mainLayoutRoutes = [
     element: <Roadmaps />,
   },
   {
-    path: "/interview-questions",
+    path: "interview-questions",
     element: <InterviewQues />,
+  },
+  {
+    path: "/resume-evaluate",
+    element: <ResumeEvaluate />,
   },
 ];
 
