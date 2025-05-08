@@ -3,6 +3,7 @@ import uvicorn
 import os
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
+from app.api.routes.PdfChat import pdfchat
 
 load_dotenv()
 
@@ -21,7 +22,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# app.include_router(interviewHelper.router, prefix="/api/v1/interviewhelper",tags=["interviewhelper"])
+app.include_router(pdfchat.router, prefix="/api/v1/pdf-chat",tags=["pdfchat"])
 
 
 @app.get("/")
