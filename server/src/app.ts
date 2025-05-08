@@ -39,7 +39,7 @@ passportConfig(passport);
 
 app.get('/', (req: Request, res: Response) => {
   res.json({
-    message: 'Welcome to Finance App Express Backend',
+    message: 'Welcome to Next-Hire App Express Backend',
   });
 });
 

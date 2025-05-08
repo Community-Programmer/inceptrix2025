@@ -1,8 +1,14 @@
 import React from 'react'
 
-const HomePage = () => {
+
+const HomePage: React.FC = () => {
+
   return (
-    <div>This is Home Page</div>
+    <>
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <h1 className='text-3xl font-bold'>Home Page</h1>
+      </div>
+    </>
   )
 }
 
