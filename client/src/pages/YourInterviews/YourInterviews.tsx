@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PlayCircle, FileText } from "lucide-react";
@@ -20,7 +20,9 @@ const YourInterviews = () => {
   useEffect(() => {
     const fetchInterviews = async () => {
       try {
-        const response = await axios.get("http://localhost:5050/api/v1/interview/getinterviews"); // Adjust path if needed
+        const response = await axios.get(
+          "http://localhost:5050/api/v1/interview/getinterviews"
+        ); // Adjust path if needed
         setInterviews(response.data);
       } catch (error) {
         console.error("Failed to fetch interviews:", error);
@@ -82,7 +84,9 @@ const YourInterviews = () => {
                       checked={e2ee}
                       onChange={(ev) => setE2ee(ev.target.checked)}
                     />
-                    <label htmlFor="use-e2ee">Enable end-to-end encryption</label>
+                    <label htmlFor="use-e2ee">
+                      Enable end-to-end encryption
+                    </label>
                   </div>
                   {e2ee && (
                     <div className="flex items-center gap-2">
@@ -101,10 +105,12 @@ const YourInterviews = () => {
                     <PlayCircle className="w-4 h-4 mr-2" />
                     Start
                   </Button>
-                  <Button variant="outline" className="flex-1">
-                    <FileText className="w-4 h-4 mr-2" />
-                    Results
-                  </Button>
+                  <Link to="interview/results/2bhy64gkj86489">
+                    <Button variant="outline" className="flex-1">
+                      <FileText className="w-4 h-4 mr-2" />
+                      Results
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </CardContent>
