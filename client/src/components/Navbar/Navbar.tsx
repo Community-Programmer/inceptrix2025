@@ -2,10 +2,19 @@ import { Menu } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import hext1 from "../../assets/next-hire.png";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store/store";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { logout } from "@/store/auth/authSlice";
 
 interface NavLink {
   href: string;
@@ -19,25 +28,27 @@ const navLinks: NavLink[] = [
   { href: "/placementprep", label: "Prepare" },
   { href: "/resume", label: "Resume Evaluator" },
   { href: "/pdf-chat", label: "Pdf Chat" },
-  { href: "/code-prep", label: "Code Prep" }
+  { href: "/code-prep", label: "Code Prep" },
+  { href: "/your-interviews", label: "Your Interviews" },
 ];
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
   const user = useSelector((state: RootState) => state.auth.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/login");
+  };
 
   return (
     <header className="w-full font-sans">
-      {/* Top Bar */}
       <div className="flex flex-col sm:flex-row items-center justify-between bg-white px-4 py-4 sm:py-3 text-foreground md:px-8 border-b border-gray-200">
         <Link className="flex-shrink-0 mb-2 sm:mb-0" to="/">
-          <img
-            src={hext1}
-            alt="PlacementPilot"
-            width={200}
-            height={60}
-          />
+          <img src={hext1} alt="PlacementPilot" width={200} height={60} />
         </Link>
         <div className="w-full px-2 sm:px-4 md:px-8 overflow-hidden">
           <div className="relative overflow-hidden group">
@@ -51,42 +62,66 @@ export default function Navbar() {
           </div>
         </div>
         {!isLoggedIn && (
-        <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-sm mt-2 sm:mt-0">
-          <div className="ml-auto flex-1 sm:flex-initial">
-            <div className="flex gap-3 relative">
-              <Link to="/signup">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="ml-auto gap-1.5 text-sm"
-                >
-                  Sign Up
-                </Button>
-              </Link>
-              <Link to="/login">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="ml-auto gap-1.5 text-sm"
-                >
-                  Sign In
-                </Button>
-              </Link>
+          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-sm mt-2 sm:mt-0">
+            <div className="ml-auto flex-1 sm:flex-initial">
+              <div className="flex gap-3 relative">
+                <Link to="/signup">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="ml-auto gap-1.5 text-sm"
+                  >
+                    Sign Up
+                  </Button>
+                </Link>
+                <Link to="/login">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="ml-auto gap-1.5 text-sm"
+                  >
+                    Sign In
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
-        </div>)}
-        {isLoggedIn && (<div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-sm mt-2 sm:mt-0">
-          <div className="ml-auto flex-1 sm:flex-initial">
-          <div className="flex gap-3 relative">
-          <span className="font-bold">Logined as: {user}</span>
+        )}
+        {isLoggedIn && (
+          <div className="flex items-center gap-4">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="relative h-8 w-8 rounded-full"
+                >
+                  <Avatar className="h-8 w-8">
+                    <AvatarFallback>
+                      {user?.charAt(0).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="end" forceMount>
+                <DropdownMenuItem className="font-normal">
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">{user}</p>
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => navigate("/profile")}>
+                  Profile
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleLogout}>
+                  Log out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
-          </div>
-          </div>)}
+        )}
       </div>
-      {/* Main Navigation */}
       <nav className="bg-background px-4 py-3 md:px-6 lg:px-8 shadow-[0_4px_6px_-1px_rgba(0,0,255,0.1)]">
         <div className="flex items-center justify-between">
-          {/* Mobile Menu Button */}
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button className="md:hidden mr-2" variant="outline" size="icon">
@@ -109,8 +144,6 @@ export default function Navbar() {
               </nav>
             </SheetContent>
           </Sheet>
-
-          {/* Desktop Navigation */}
           <div className="hidden w-full justify-center items-center space-x-4 md:flex lg:space-x-8">
             {navLinks.map((link) => (
               <Link
@@ -124,22 +157,6 @@ export default function Navbar() {
           </div>
         </div>
       </nav>
-      <style jsx>{`
-        @keyframes marquee {
-          0% {
-            transform: translateX(100%);
-          }
-          100% {
-            transform: translateX(-100%);
-          }
-        }
-        .animate-marquee {
-          animation: marquee 20s linear infinite;
-        }
-        .group:hover .group-hover\\:pause {
-          animation-play-state: paused;
-        }
-      `}</style>
     </header>
   );
 }

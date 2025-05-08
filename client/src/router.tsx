@@ -1,4 +1,3 @@
-// router.tsx
 import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "@/Layout/MainLayout";
 import HomePage from "@/pages/Home/Home";
@@ -7,6 +6,9 @@ import SignUpForm from "./pages/SignUp/SignUp";
 import About from "./pages/About/About";
 import Features from "./pages/Features/Features";
 import Premium from "./pages/Premium/Premium";
+import Profile from "./pages/Profile/Profile";
+import InterviewHelp from "./pages/InterviewHelp/InterviewHelp";
+import YourInterviews from "./pages/YourInterviews/YourInterviews";
 
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import RootWrapper from "./Layout/RootWrapper";
@@ -38,6 +40,18 @@ const mainLayoutRoutes = [
   {
     path: "/Whiteboard",
     element: <SmartWhiteboard />,
+  },
+  {
+    path: "/profile",
+    element: <Profile />,
+  },
+  {
+    path: "/interview-help",
+    element: <InterviewHelp />,
+  },
+  {
+    path: "/your-interviews",
+    element: <YourInterviews />,
   },
 ];
 
