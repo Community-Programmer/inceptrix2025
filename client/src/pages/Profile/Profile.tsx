@@ -17,7 +17,8 @@ const api = axios.create({
 
 const Profile = () => {
   const user = useSelector((state: RootState) => state.auth.user);
-  const [isResumeUploaded, setIsResumeUploaded] = useState(false);
+  const isResumeUploaded = useSelector((state: RootState) => state.auth.isResumeUploaded);
+
 
   const handleFileUpload = async (file: File) => {
     const formData = new FormData();
@@ -27,10 +28,9 @@ const Profile = () => {
       const response = await api.post('/resume/upload-pdf',formData)
   
       console.log("Upload successful:", response.data);
-      setIsResumeUploaded(true);
+
     } catch (error: any) {
       console.error("Upload failed:", error.response?.data || error.message);
-      setIsResumeUploaded(false);
     }
   };
 

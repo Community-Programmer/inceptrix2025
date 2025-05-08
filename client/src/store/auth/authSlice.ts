@@ -6,7 +6,8 @@ import axios from 'axios';
     isLoggedIn : false,
     user: null,
     accessToken: null,
-    loading: true
+    loading: true,
+    isResumeUploaded: false,
   };
 
   // interface LoginData {
@@ -54,9 +55,6 @@ import axios from 'axios';
       },
     },
     extraReducers: (builder) => {
-      // builder.addCase(login.fulfilled, (state, action) => {
-      //   state.accessToken = action.payload;
-      // });
       builder.addCase(silentRefresh.pending, (state) => {
         state.loading = true;
       });
@@ -65,6 +63,7 @@ import axios from 'axios';
         state.accessToken = action.payload.accessToken;
         state.loading = false;
         state.user = action.payload.user;
+        state.isResumeUploaded = action.payload.isResumeUploaded;
       });
       builder.addCase(silentRefresh.rejected, (state) => {
         state.loading = false;
