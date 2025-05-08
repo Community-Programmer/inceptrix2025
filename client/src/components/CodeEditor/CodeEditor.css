@@ -1,0 +1,118 @@
+* CodeRunner.css */ .container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: auto;
+  height: auto;
+  z-index: 9999;
+  pointer-events: none; /* Let clicks pass through the container */
+}
+.rndContainer {
+  pointer-events: auto; /* But capture clicks on the actual editor */
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+.frame {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.header {
+  background-color: #2d2d2d;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  user-select: none;
+  cursor: move; /* Show move cursor to indicate draggability */
+}
+.header:hover {
+  background-color: #333333;
+}
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.select {
+  background-color: #ffffff;
+  padding: 4px 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+}
+.runButton {
+  padding: 4px 16px;
+  border-radius: 0.25rem;
+  background-color: #000000;
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+.runButton:hover:not(:disabled) {
+  background-color: #1e40af;
+}
+.runButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #ffffff;
+}
+.editorContainer {
+  flex-grow: 1;
+}
+.outputContainer {
+  padding: 12px;
+  border-top: 1px solid #e5e7eb;
+  height: 128px;
+  overflow-y: auto;
+  font-family: monospace;
+  font-size: 0.875rem;
+  background-color: #000000;
+}
+.outputHeader {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin-bottom: 4px;
+}
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.message {
+  padding: 8px;
+  border-left-width: 4px;
+  border-radius: 0.25rem;
+  background-color: #f9fafb;
+}
+.message .label {
+  font-weight: 600;
+}
+.message.compiler {
+  border-left-color: #fbbf24;
+  background-color: #fffbeb;
+  color: #92400e;
+}
+.message.error {
+  border-left-color: #ef4444;
+  background-color: #fef2f2;
+  color: #991b1b;
+}
+.message.success {
+  border-left-color: #10b981;
+  background-color: #ecfdf5;
+  color: #065f46;
+}
+.placeholder {
+  color: #6b7280;
+  font-style: italic;
+}

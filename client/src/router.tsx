@@ -15,6 +15,8 @@ import VerificationStatus from "./pages/EmailVerification/VerificationStatus";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import PasswordResetForm from "./pages/ForgotPassword/PasswordResetForm";
 
+import SmartWhiteboard from "./components/SmartWhiteboard/SmartWhiteboard";
+
 const mainLayoutRoutes = [
   {
     path: "/",
@@ -33,21 +35,24 @@ const mainLayoutRoutes = [
     path: "/Premium",
     element: <Premium />,
   },
+  {
+    path: "/Whiteboard",
+    element: <SmartWhiteboard />,
+  },
 ];
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <RootWrapper />, 
+    element: <RootWrapper />,
     children: [
       {
         path: "/",
-        element: <ProtectedRoute />, 
+        element: <ProtectedRoute />,
         children: [
           {
             path: "/Features",
-            element: <Features/>,
-
+            element: <Features />,
           },
         ],
       },
@@ -79,7 +84,7 @@ const router = createBrowserRouter([
       {
         path: "/reset-password/:resetToken",
         element: <PasswordResetForm />,
-      }
+      },
     ],
   },
 ]);
