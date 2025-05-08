@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import axios from "axios";
 
 const jobRoles = [
   "Software Engineer",
@@ -42,7 +43,10 @@ const InterviewHelp = () => {
     extraInfo: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!isResumeUploaded) {
@@ -50,9 +54,20 @@ const InterviewHelp = () => {
       return;
     }
 
-    // Handle form submission
-    console.log("Form submitted:", formData);
-    navigate("/your-interviews");
+    try {
+      setLoading(true);
+      setError("");
+
+      const response = await axios.post("http://localhost:5050/api/v1/interview/createinterview", formData);
+
+      console.log("Interview created:", response.data);
+      navigate("/your-interviews");
+    } catch (err: any) {
+      console.error("Error submitting form:", err);
+      setError("Failed to create interview. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -144,8 +159,10 @@ const InterviewHelp = () => {
               />
             </div>
 
-            <Button type="submit" className="w-full">
-              Create Interview
+            {error && <p className="text-red-500">{error}</p>}
+
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "Creating..." : "Create Interview"}
             </Button>
           </form>
         </CardContent>

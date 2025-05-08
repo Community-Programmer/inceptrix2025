@@ -138,12 +138,12 @@ const signin = async (req: Request, res: Response, next: NextFunction) => {
     const { accessToken, refreshToken } = generateTokens(user.id);
 
     res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
+      httpOnly: false,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
     });
 
-    res.json({ accessToken, isVerified: true, success: true });
+    res.json({ accessToken, isVerified: true, success: true});
   } catch (error) {
     console.log(error);
     return next(createHttpError(500, 'Error while processing your request'));
@@ -373,7 +373,7 @@ const refreshToken = async (
 
         const { accessToken } = generateTokens(user.id);
 
-        res.json({ accessToken , user: user.username});
+        res.json({ accessToken , user: user.username, isResumeUploaded: user.isResumeUploaded });
       }
     );
   } catch (error) {
