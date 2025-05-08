@@ -59,3 +59,13 @@ model PasswordResetToken {
   isUsed           Boolean  @default(false)
   createdAt        DateTime @default(now())
 }
+
+model Interview {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+  jobRole     String
+  model       String
+  extraInfo   String?
+  createdAt   DateTime @default(now())
+}
