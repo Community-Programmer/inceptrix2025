@@ -1,7 +1,10 @@
-import { useState, useEffect, FormEvent } from "react";
+"use client";
+
+import { useState, useEffect, type FormEvent } from "react";
 import { useSearchParams } from "react-router-dom";
-import { getIndustryInsights, refreshIndustryInsights } from '../../lib/api'
+import { getIndustryInsights, refreshIndustryInsights } from "../../lib/api";
 import DashboardView from "./DashboardView";
+import { RefreshCw } from "lucide-react";
 
 interface SalaryRange {
   role: string;
@@ -76,51 +79,79 @@ function IndustryInsights() {
   };
 
   return (
-    <div className="container py-8">
-      <h1 className="text-3xl font-bold mb-8">Industry Insights</h1>
+    <div className="min-h-screen bg-gradient-to-br from-white to-gray-50 py-10">
+      <div className="container mx-auto px-6">
+        <h1 className="text-3xl md:text-4xl font-bold mb-8 text-gray-800">
+          Industry{" "}
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600">
+            Insights
+          </span>
+        </h1>
 
-      <form onSubmit={handleSubmit} className="flex gap-2 mb-8">
-        <input
-          type="text"
-          placeholder="Enter industry (e.g., Software Development)"
-          value={industry}
-          onChange={(e) => setIndustry(e.target.value)}
-          className="flex-1 px-4 py-2 border rounded-md"
-        />
-        <button
-          type="submit"
-          disabled={loading || !industry.trim()}
-          className="px-4 py-2 bg-blue-600 text-white rounded-md disabled:bg-blue-300"
-        >
-          {loading ? "Loading..." : "Get Insights"}
-        </button>
-      </form>
-
-      {error && <div className="text-red-500 mb-4">{error}</div>}
-
-      {insights && (
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-semibold">{industry} Industry Insights</h2>
+        <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-gray-100">
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col sm:flex-row gap-3"
+          >
+            <input
+              type="text"
+              placeholder="Enter industry (e.g., Software Development)"
+              value={industry}
+              onChange={(e) => setIndustry(e.target.value)}
+              className="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+            />
             <button
-              className="px-4 py-2 bg-gray-200 rounded-md disabled:bg-gray-100"
-              onClick={handleRefresh}
-              disabled={refreshing}
+              type="submit"
+              disabled={loading || !industry.trim()}
+              className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl font-medium shadow-md hover:shadow-lg transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed transform hover:-translate-y-1 active:translate-y-0"
             >
-              {refreshing ? "Refreshing..." : "Refresh Insights"}
+              {loading ? "Loading..." : "Get Insights"}
             </button>
-          </div>
-          <DashboardView insights={insights} />
+          </form>
         </div>
-      )}
 
-      {!insights && !loading && (
-        <div className="text-center py-10">
-          <p className="text-gray-500">
-            Enter an industry above to get insights powered by Gemini AI
-          </p>
-        </div>
-      )}
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-600 rounded-xl p-4 mb-6 shadow-sm">
+            {error}
+          </div>
+        )}
+
+        {insights && (
+          <div className="space-y-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <h2 className="text-2xl font-semibold text-gray-800">
+                {industry} Industry Insights
+              </h2>
+              <button
+                className="px-4 py-2.5 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 flex items-center gap-2 text-gray-700"
+                onClick={handleRefresh}
+                disabled={refreshing}
+              >
+                <RefreshCw
+                  className={`h-4 w-4 ${refreshing ? "animate-spin" : ""}`}
+                />
+                {refreshing ? "Refreshing..." : "Refresh Insights"}
+              </button>
+            </div>
+            <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 shadow-lg border border-gray-100">
+              <DashboardView insights={insights} />
+            </div>
+          </div>
+        )}
+
+        {!insights && !loading && (
+          <div className="bg-white rounded-xl shadow-lg p-10 text-center border border-gray-100">
+            <div className="max-w-md mx-auto">
+              <p className="text-gray-600">
+                Enter an industry above to get insights powered by Gemini AI
+              </p>
+              <div className="mt-6 w-16 h-16 mx-auto rounded-full bg-gradient-to-r from-blue-100 to-purple-100 flex items-center justify-center">
+                <RefreshCw className="h-8 w-8 text-blue-500" />
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

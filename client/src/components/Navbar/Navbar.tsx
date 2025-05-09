@@ -20,10 +20,10 @@ const navLinks = [
   { href: "/", label: "Home" },
   { href: "/interview", label: "Mock Interview" },
   { href: "/interview-help", label: "Interview AI Assistant" },
-  { href: "/placementprep", label: "Prepare" },
+  { href: "/quiz", label: "Quiz" },
   { href: "/resume", label: "Resume Evaluator" },
   { href: "/pdf-chat", label: "Pdf Chat" },
-  { href: "/code-prep", label: "Code Prep" },
+  { href: "/insights", label: "Insights" },
   { href: "/your-interviews", label: "Your Interviews" },
 ];
 

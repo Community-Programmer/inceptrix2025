@@ -1,6 +1,6 @@
 // src/lib/api.ts
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5050/api';
 
 // Define the expected structure of insights
 export interface SalaryRange {

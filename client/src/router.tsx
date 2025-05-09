@@ -26,6 +26,9 @@ import Results from "./pages/Results/Results";
 import IndustryInsights from "./components/Insights/IndustryInsights";
 import InsightHome from "./components/Insights/InsightHome";
 import PdfChat from "./pages/pdfChat/pdfChat";
+import Quiz from "./pages/Quiz/Quiz";
+import History from "./pages/Quiz/History";
+import QuizAnalytics from "./pages/Quiz/QuizAnalytics";
 
 const mainLayoutRoutes = [
   {
@@ -88,6 +91,18 @@ const mainLayoutRoutes = [
   {
     path: "/pdf-chat",
     element: <PdfChat />,
+  },
+  {
+    path: "/quiz",
+    element: <Quiz />,
+  },
+  {
+    path: "/quiz-history",
+    element: <History />,
+  },
+  {
+    path: "/quiz-analytics/:id",
+    element: <QuizAnalytics />,
   },
 ];
 

@@ -1,6 +1,8 @@
 // services/geminiService.ts
 import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai';
+import { config } from 'dotenv';
 
+config();
 // Define types for AI insights
 export interface SalaryRange {
   role: string;
@@ -22,14 +24,18 @@ export interface AIInsights {
 
 // Initialize Gemini AI (recommended: move key to env variable)
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
-const model: GenerativeModel = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+const model: GenerativeModel = genAI.getGenerativeModel({
+  model: 'gemini-1.5-flash',
+});
 
 /**
  * Generate industry insights using Gemini AI
  * @param industry - The industry to analyze
  * @returns JSON object with industry insights
  */
-export const generateAIInsights = async (industry: string): Promise<AIInsights> => {
+export const generateAIInsights = async (
+  industry: string
+): Promise<AIInsights> => {
   const prompt = `
     Analyze the current state of the ${industry} industry and provide insights in ONLY the following JSON format without any additional notes or explanations:
     {
