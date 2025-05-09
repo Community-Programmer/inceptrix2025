@@ -19,3 +19,6 @@ Werkzeug<1
 python-docx
 pypandoc
 boto3
+Werkzeug<1
+python-docx
+pypandoc

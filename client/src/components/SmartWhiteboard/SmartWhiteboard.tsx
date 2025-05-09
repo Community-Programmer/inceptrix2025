@@ -117,6 +117,9 @@ export default function App() {
   const codeEditorRef = useRef<HTMLDivElement>(null);
   // Add state for tracking focus
   const [isEditorFocused, setIsEditorFocused] = useState(false);
+  // Add new state for voice recognition
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
 
   // Add console logs to debug
   const toggleCodeEditor = () => {
@@ -171,7 +174,7 @@ export default function App() {
     setStatus("connecting");
     // Update the WebSocket URL to match the new router path
     const ws = new WebSocket(
-      `ws://localhost:8080/api/v1/whiteboard/ws/${clientId}`
+      `ws://localhost:8000/api/v1/whiteboard/ws/${clientId}`
     );
     let pingIntervalId: ReturnType<typeof setInterval> | undefined = undefined;
 
@@ -497,7 +500,7 @@ export default function App() {
     try {
       // Update the fetch URL to match the new router path
       const res = await fetch(
-        "http://localhost:8080/api/v1/whiteboard/generate-diagram",
+        "http://localhost:8000/api/v1/whiteboard/generate-diagram",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -569,6 +572,64 @@ export default function App() {
     };
   }, [showCodeEditor]);
 
+  // Add this function to handle voice input
+  const toggleVoiceInput = () => {
+    if (!isListening) {
+      startListening();
+    } else {
+      stopListening();
+    }
+  };
+
+  // Function to start voice recognition
+  const startListening = () => {
+    if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+      // Initialize the SpeechRecognition object
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognitionRef.current = new SpeechRecognition();
+      
+      recognitionRef.current.continuous = true;
+      recognitionRef.current.interimResults = true;
+      recognitionRef.current.lang = 'en-US';
+      
+      recognitionRef.current.onstart = () => {
+        console.log("[Voice] Started listening");
+        setIsListening(true);
+      };
+      
+      recognitionRef.current.onresult = (event) => {
+        const transcript = Array.from(event.results)
+          .map(result => result[0])
+          .map(result => result.transcript)
+          .join('');
+        
+        setPrompt(transcript);
+      };
+      
+      recognitionRef.current.onerror = (event) => {
+        console.error("[Voice] Error:", event.error);
+        stopListening();
+      };
+      
+      recognitionRef.current.onend = () => {
+        console.log("[Voice] Stopped listening");
+        setIsListening(false);
+      };
+      
+      recognitionRef.current.start();
+    } else {
+      console.error("[Voice] Speech recognition not supported in this browser");
+    }
+  };
+
+  // Function to stop voice recognition
+  const stopListening = () => {
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    }
+  };
+
   // JSX structure (as previously defined)
   return (
     <div className="app-container">
@@ -589,6 +650,13 @@ export default function App() {
             className={`generate-button ${isGenerating ? "generating" : ""}`}
           >
             {isGenerating ? "Generating..." : "Generate Diagram"}
+          </button>
+          <button
+            onClick={toggleVoiceInput}
+            disabled={isGenerating}
+            className={`voice-input-button ${isListening ? "listening" : ""}`}
+          >
+            {isListening ? "Stop Listening" : "Voice Input"}
           </button>
           <button
             onClick={clearCanvas}

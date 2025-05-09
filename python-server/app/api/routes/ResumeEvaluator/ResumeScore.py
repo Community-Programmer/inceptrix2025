@@ -12,14 +12,15 @@ import docx
 import pypandoc
 from io import BytesIO
 from fastapi import APIRouter, Cookie, Request
-
 from fastapi.responses import JSONResponse
+import re
 
+# Import the helper functions including the new is_resume_ai function
+from .resumeHelper import allowed_file, extract_text, extract_json_from_response, is_resume_ai
 
 router = APIRouter()
 
 load_dotenv()
-
 
 # Configuration for file uploads
 UPLOAD_FOLDER = 'uploads'
@@ -103,8 +104,6 @@ async def test():
     return JSONResponse(content={"message": "Server is running"}, status_code=200)
 
 
-import re
-
 @router.post("/evaluate-resume")
 async def evaluate_resume(file: UploadFile = File(...)):
     logging.info('Received request to evaluate resume')
@@ -115,10 +114,25 @@ async def evaluate_resume(file: UploadFile = File(...)):
         file_extension = filename.rsplit('.', 1)[1].lower()
 
         if not allowed_file(filename):
-            raise HTTPException(status_code=400, detail="Invalid file type")
+            return JSONResponse(content={
+                "error": "Invalid file type. Please upload a PDF, DOCX, TXT, ODT, TEX, HTML, or RTF file.",
+                "is_resume": False
+            }, status_code=400)
 
         file_content = await file.read()
         resume_text = extract_text(BytesIO(file_content), file_extension)
+        
+        # Check if the uploaded file is actually a resume using AI
+        is_resume, reason = await is_resume_ai(resume_text)
+        
+        if not is_resume:
+            logging.info(f"Non-resume document detected: {reason}")
+            return JSONResponse(content={
+                "error": f"The uploaded file does not appear to be a resume. {reason}",
+                "is_resume": False
+            }, status_code=400)
+            
+        logging.info("Resume validation passed, proceeding with evaluation")
         role = os.getenv("ROLE", "Web Developer")
 
         ats_prompt = f"""
@@ -250,15 +264,17 @@ async def evaluate_resume(file: UploadFile = File(...)):
 
         except Exception as api_error:
             logging.error(f"API Error: {api_error}. Using fallback responses.")
-
+            raise HTTPException(status_code=500, detail=f"Error with AI service: {str(api_error)}")
 
         return JSONResponse(content={
             "ats_evaluation": ats_evaluation,
-            "normal_evaluation": normal_evaluation
+            "normal_evaluation": normal_evaluation,
+            "is_resume": True
         }, status_code=200)
 
     except Exception as e:
         logging.error(f"Error during evaluation: {e}")
-        # Even in case of processing error, return fallback responses
         return JSONResponse(content={
+            "error": f"Error processing file: {str(e)}",
+            "is_resume": False
         }, status_code=200)

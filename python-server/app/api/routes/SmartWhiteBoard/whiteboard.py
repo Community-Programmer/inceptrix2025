@@ -124,6 +124,8 @@ async def generate_diagram_with_groq(prompt: str) -> list[dict]:
        - For decision nodes: Phrase as questions with yes/no outcomes
        - For process nodes: Describe the actual operation being performed
        - For the specific problem in the prompt, include detailed steps that would actually solve the problem
+    
+    5. Give ample amount of space between shapes
     """
 
     user_prompt_content = f"""

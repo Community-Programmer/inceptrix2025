@@ -20,6 +20,7 @@ const ResumeEvaluate: React.FC = () => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [evaluation, setEvaluation] = useState<any>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -50,15 +51,26 @@ const ResumeEvaluate: React.FC = () => {
         }
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to process resume");
+      const result = await response.json();
+      
+      // Check if the file is not a resume
+      if (!response.ok || result.error) {
+        if (result.is_resume === false) {
+          // Display a more prominent error message for non-resume documents
+          setEvaluation(null); // Clear any previous evaluation
+          setError(result.error || "The uploaded file does not appear to be a resume. Please upload a valid resume document.");
+        } else {
+          setError("Error while evaluating resume: " + (result.error || "Unknown error"));
+        }
+        return;
       }
 
-      const result = await response.json();
-      setEvaluation(result.normal_evaluation); // Extracting the "normal_evaluation"
+      // Clear any previous errors
+      setError(null);
+      setEvaluation(result.normal_evaluation);
     } catch (error) {
       console.error(error);
-      alert("Error while evaluating resume.");
+      setError("Error while evaluating resume. Please try again.");
     } finally {
       setIsUploading(false);
     }

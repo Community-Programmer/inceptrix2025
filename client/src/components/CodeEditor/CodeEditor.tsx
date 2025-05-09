@@ -1,5 +1,5 @@
 // CodeRunner.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Rnd } from "react-rnd";
 import Editor from "@monaco-editor/react";
 import "./CodeEditor.css";
@@ -21,6 +21,29 @@ const JUDGE0_HEADERS = {
   "X-RapidAPI-Key": "1063dae854mshb7285011c3e9141p1c5c69jsne78245d9325d",
 };
 
+// Define sample code for each language
+const languageExamples = {
+  cpp: `#include <iostream>
+using namespace std;
+
+int main() {
+  cout << "Hello, C++!" << endl;
+  return 0;
+}`,
+  python: `# Python example
+print("Hello, Python!")
+
+def greet(name):
+    return f"Welcome, {name}!"
+    
+print(greet("Candidate"))`,
+  java: `public class Main {
+  public static void main(String[] args) {
+    System.out.println("Hello, Java!");
+  }
+}`
+};
+
 const languages = [
   { id: 52, monaco: "cpp", name: "C++ (GCC 9.2.0)" },
   { id: 71, monaco: "python", name: "Python (3.8.1)" },
@@ -32,12 +55,19 @@ interface CodeRunnerProps {
 }
 
 export const CodeRunner: React.FC<CodeRunnerProps> = ({ onFocus }) => {
-  const [code, setCode] = useState<string>(
-    `#include <iostream>\nusing namespace std;\nint main() { cout << \"Hello, Judge0!\"; return 0; }`
-  );
+  const [code, setCode] = useState<string>(languageExamples.cpp);
   const [output, setOutput] = useState<ExecutionResult | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedLang, setSelectedLang] = useState(languages[0]);
+
+  // Update code when language changes
+  useEffect(() => {
+    // Get the example code for the selected language
+    const langKey = selectedLang.monaco as keyof typeof languageExamples;
+    if (languageExamples[langKey]) {
+      setCode(languageExamples[langKey]);
+    }
+  }, [selectedLang]);
 
   // Handle focus events
   const handleFocus = () => {
@@ -83,6 +113,14 @@ export const CodeRunner: React.FC<CodeRunnerProps> = ({ onFocus }) => {
     }
   };
 
+  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const langId = parseInt(e.target.value);
+    const lang = languages.find((l) => l.id === langId);
+    if (lang) {
+      setSelectedLang(lang);
+    }
+  };
+
   return (
     <div className="container" style={{ width: "100%", height: "100%" }}>
       <div
@@ -98,12 +136,7 @@ export const CodeRunner: React.FC<CodeRunnerProps> = ({ onFocus }) => {
           <div className="controls">
             <select
               value={selectedLang.id}
-              onChange={(e) => {
-                const lang = languages.find(
-                  (l) => l.id === parseInt(e.target.value)
-                );
-                if (lang) setSelectedLang(lang);
-              }}
+              onChange={handleLanguageChange}
               className="select"
             >
               {languages.map((lang) => (
@@ -126,10 +159,11 @@ export const CodeRunner: React.FC<CodeRunnerProps> = ({ onFocus }) => {
         <div className="editorContainer" style={{ flex: 1 }}>
           <Editor
             height="100%"
-            defaultLanguage={selectedLang.monaco}
+            language={selectedLang.monaco}
             value={code}
             onChange={(value: any) => setCode(value || "")}
             theme="vs-dark"
+            onFocus={handleFocus}
             options={{
               minimap: { enabled: false },
               scrollBeyondLastLine: false,
