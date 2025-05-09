@@ -25,7 +25,7 @@ import ResumeEvaluate from "./pages/ResumeEvaluator/ResumeEvaluator";
 import Results from "./pages/Results/Results";
 import IndustryInsights from "./components/Insights/IndustryInsights";
 import InsightHome from "./components/Insights/InsightHome";
-
+import PdfChat from "./pages/pdfChat/pdfChat";
 
 const mainLayoutRoutes = [
   {
@@ -80,10 +80,15 @@ const mainLayoutRoutes = [
   {
     path: "/industry-insights",
     element: <IndustryInsights />,
-  },{
+  },
+  {
     path: "/insights",
     element: <InsightHome />,
-  }
+  },
+  {
+    path: "/pdf-chat",
+    element: <PdfChat />,
+  },
 ];
 
 const router = createBrowserRouter([
