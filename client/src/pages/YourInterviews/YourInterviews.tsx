@@ -102,7 +102,7 @@ const YourInterviews = () => {
                     <PlayCircle className="w-4 h-4 mr-2" />
                     Start
                   </Button>
-                  <Link to="interview/results/2bhy64gkj86489">
+                  <Link to={`/interview/results/${interview.id}`}>
                     <Button variant="outline" className="flex-1">
                       <FileText className="w-4 h-4 mr-2" />
                       Results

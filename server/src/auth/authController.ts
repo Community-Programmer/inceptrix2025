@@ -391,7 +391,7 @@ const googleCallback = async (
 
   const { accessToken, refreshToken } = generateTokens(_req.user.id);
   res.cookie('refreshToken', refreshToken, {
-    httpOnly: true,
+    httpOnly: false,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
   });
@@ -406,7 +406,7 @@ const githubCallback = async (
   const _req = req as AuthRequest;
   const { accessToken, refreshToken } = generateTokens(_req.user.id);
   res.cookie('refreshToken', refreshToken, {
-    httpOnly: true,
+    httpOnly: false,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
   });

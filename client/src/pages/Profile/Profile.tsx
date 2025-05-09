@@ -12,7 +12,7 @@ const api = axios.create({
   headers:{
       'Content-Type':'multipart/form-data'
   },
-  withCredentials: true
+  withCredentials:true
 });
 
 const Profile = () => {
@@ -25,7 +25,7 @@ const Profile = () => {
     formData.append("resume", file);
   
     try {
-      const response = await api.post('/resume/upload-pdf',formData)
+      const response = await api.post('/upload/upload-pdf',formData,)
   
       console.log("Upload successful:", response.data);
 

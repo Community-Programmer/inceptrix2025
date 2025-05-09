@@ -14,6 +14,9 @@ import {
   Info,
 } from "lucide-react";
 import dummyResult from "./dummyResult.json";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+import { set } from "date-fns";
 
 
 interface InterviewResult {
@@ -211,21 +214,35 @@ const Callout = ({
 const Results = () => {
   // Precise Analysis state
   //@ts-ignore
-  const [result] = useState<InterviewResult>(dummyResult);
-  const [loading] = useState(false);
+  const [result, setResult] = useState<InterviewResult>(null);
+  const [loading, setLoading] = useState(false);
   const [error] = useState<string | null>(null);
+ const { interviewId } = useParams<{ interviewId: string }>();
+
 
   // Detailed Analysis state
   const [detailedText, setDetailedText] = useState<string>("");
   const [textError, setTextError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("/timestamped_response.txt")
-      .then((res) =>
-        res.ok ? res.text() : Promise.reject("Failed to load detailed text")
-      )
-      .then(setDetailedText)
-      .catch((err) => setTextError(String(err)));
+    const input_data ={
+      bucket:'next-hire-s3',
+      key:`${interviewId}-video.mp4`,
+    }
+    const fetchData = async () => {
+      setLoading(true);
+      try { 
+    const response = await axios.post("http://localhost:8000/analyze-interview", input_data, );
+    setResult(response.data.structured_response);
+    setDetailedText(response.data.detailed_response);
+    setLoading(false);
+      } catch (err) { 
+        console.error("Error fetching data:", err);
+        setTextError("Failed to load detailed analysis.");
+      }
+    };
+
+    fetchData();
   }, []);
 
   // Custom renderer for markdown that processes special syntax for callouts
@@ -245,6 +262,7 @@ const Results = () => {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
+        <span className="ml-4 text-lg text-gray-700">Loading...</span>
       </div>
     );
   }

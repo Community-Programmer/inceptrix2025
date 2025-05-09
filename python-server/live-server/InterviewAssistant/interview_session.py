@@ -10,6 +10,19 @@ from livekit.plugins import bey
 from livekit.agents import AgentSession, ChatContext, RoomInputOptions
 from livekit.plugins import google, bey
 import os
+from pymongo import MongoClient
+from bson import ObjectId
+
+MONOGO_URI = os.getenv("MONGODB_CONNECTION_STRING")
+
+client = MongoClient(MONOGO_URI)
+db = client["nextHire"]
+users_collection = db["Interview"]
+# object_id = ObjectId('681d403dabb398debb8b4d4d')
+# interview_data = users_collection.find_one({"_id": object_id})
+# print(interview_data)
+# user_id = interview_data.get("userId")
+# print(user_id)
 
 access_key = os.getenv("AWS_ACCESS_KEY")
 secret_key = os.getenv("AWS_SECRET_KEY")
@@ -17,9 +30,14 @@ aws_region = os.getenv("AWS_REGION")
 bucket_name = os.getenv("BUCKET_NAME")
 
 async def entrypoint(ctx: agents.JobContext):
-    await ctx.connect()
+    interview_data = users_collection.find_one({"_id": ObjectId(ctx.room.name)})
+    user_id = interview_data.get("userId")
+    resume_path = os.path.join("uploads", f"{user_id}.pdf")
 
-    print(ctx.room)
+
+    print(interview_data,user_id, resume_path)
+    client.close()
+    await ctx.connect()
 
     req = api.RoomCompositeEgressRequest(
         room_name=ctx.room.name,
@@ -39,6 +57,7 @@ async def entrypoint(ctx: agents.JobContext):
 
     await lkapi.aclose()
 
+ 
     # === Setup Session ===
     session = AgentSession(
         llm=google.beta.realtime.RealtimeModel(
@@ -50,41 +69,41 @@ You are the live agent for a structured technical interview. Use the following g
 
 **1. Interview Structure**  
 - **Opening (1-2 minutes):**  
-  1. “Hello [Candidate Name], welcome. You're interviewing for [Role].”  
-  2. “We'll cover technical skills, deep dives on your projects, behavioral questions, then wrap up.”  
+  1. "Hello [Candidate Name], welcome. You're interviewing for [Role]."  
+  2. "We'll cover technical skills, deep dives on your projects, behavioral questions, then wrap up."  
 - **Technical Round (10-15 minutes):**  
   - Start with language fundamentals: data types, control flow, error handling.  
   - Move into problem solving: ask a coding puzzle or algorithm question, request thought process and pseudo-code.  
-  - Cover system design: “Design a highly available microservice for X.”  
+  - Cover system design: "Design a highly available microservice for X."  
 - **Project Deep-Dive (10 minutes):**  
-  - “On your sentiment-analysis Twitter project, how did you handle streaming, preprocessing, and latency?”  
-  - Ask follow-ups: “What libraries? How did you evaluate model accuracy? How did you deploy to AWS?”  
+  - "On your sentiment-analysis Twitter project, how did you handle streaming, preprocessing, and latency?"  
+  - Ask follow-ups: "What libraries? How did you evaluate model accuracy? How did you deploy to AWS?"  
 - **Behavioral/Situational (5-7 minutes):**  
-  - “Tell me about a time you disagreed with a teammate. How did you resolve it?”  
-  - “Describe handling a production outage under pressure.”  
+  - "Tell me about a time you disagreed with a teammate. How did you resolve it?"  
+  - "Describe handling a production outage under pressure."  
 - **Closing (1-2 minutes):**  
-  - “Do you have any questions for us?”  
-  - “Next steps: we'll get back within X days.”  
+  - "Do you have any questions for us?"  
+  - "Next steps: we'll get back within X days."  
 
 **2. Quality Control**  
-- Prompt for specifics: “Can you paste or describe actual code?”  
-- Avoid accepting “I googled it” or “I vaguely recall”; insist on first-hand experience.  
-- Keep follow-ups sharp: “Why did you choose that approach over alternatives?”  
+- Prompt for specifics: "Can you paste or describe actual code?"  
+- Avoid accepting "I googled it" or "I vaguely recall"; insist on first-hand experience.  
+- Keep follow-ups sharp: "Why did you choose that approach over alternatives?"  
 
 **3. Malpractice Monitoring**  
 Continuously run computer-vision and audio analysis to detect:
-- **Gaze & Attention:** camera-gaze off-screen >5 seconds → “Please maintain camera focus.”  
-- **Multiple People:** >1 face → “Please ensure only you are visible.”  
-- **Unauthorized Objects:** phones, books, notes → “Remove any reference material from view.”  
-- **Multiple Voices:** simultaneous voices → “Please ensure you're the only speaker.”  
-- **Suspicious Sounds:** phone notifications → “Please silence notifications.”  
+- **Gaze & Attention:** camera-gaze off-screen >5 seconds → "Please maintain camera focus."  
+- **Multiple People:** >1 face → "Please ensure only you are visible."  
+- **Unauthorized Objects:** phones, books, notes → "Remove any reference material from view."  
+- **Multiple Voices:** simultaneous voices → "Please ensure you're the only speaker."  
+- **Suspicious Sounds:** phone notifications → "Please silence notifications."  
 Log every incident in the transcript with timestamp and type of flag for post-interview review.  
 """
         )
     )
 
     # Inject resume context
-    pdf_text = extract_text_from_pdf("./resume.pdf")  # Update filename
+    pdf_text = extract_text_from_pdf(f'D:/Code/iniy/inceptrix2025/python-server/uploads/{user_id}.pdf')
     prompt = build_resume_parsing_prompt(pdf_text)
     resume_text = query_groq(prompt)
 

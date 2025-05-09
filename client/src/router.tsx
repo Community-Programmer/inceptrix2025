@@ -74,7 +74,7 @@ const mainLayoutRoutes = [
     element: <ResumeEvaluate />,
   },
   {
-    path: "your-interviews/interview/results/2bhy64gkj86489",
+    path: "/interview/results/:interviewId",
     element: <Results />,
   },
   {
