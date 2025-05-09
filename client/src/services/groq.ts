@@ -175,5 +175,46 @@ Format:
   }
 }
 
+export async function generatePdfChat(
+  pdfContent: string,
+  userQuestion: string
+): Promise<string> {
+  try {
+    const systemPrompt = `You are a professional AI assistant specialized in analyzing PDF documents. Your responses should be:
+1. Well-structured with clear sections when appropriate
+2. Concise yet comprehensive
+3. Professional in tone
+4. Include relevant quotes from the document when applicable (in quotation marks)
+5. Always cite specific sections or pages if you can identify them
+6. If information is not found in the document, clearly state that
 
+Use the following PDF content to answer questions:
 
+${pdfContent}
+
+Format longer responses with appropriate Markdown:
+- Use **bold** for emphasis
+- Use bullet points for lists
+- Use > for quotes from the document
+- Use ### for section headers if needed`;
+
+    // Make API call to generate chat response
+    const completion = await groq.chat.completions.create({
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userQuestion },
+      ],
+      model: "llama-3.1-8b-instant",
+      temperature: 0.7,
+      max_tokens: 2048,
+    });
+
+    return (
+      completion.choices[0]?.message?.content ||
+      "I couldn't generate a response."
+    );
+  } catch (error) {
+    console.error("Error generating chat response:", error);
+    throw new Error("Failed to generate response");
+  }
+}

@@ -15,50 +15,6 @@ const Footer = () => {
       <div className="container mx-auto px-6">
         <div className="relative">
           {/* CTA Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="bg-white rounded-3xl p-10 shadow-xl border border-gray-100 mb-16 relative overflow-hidden"
-          >
-            {/* Decorative elements */}
-            <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
-              <div className="absolute -top-20 -left-20 w-40 h-40 bg-blue-100 rounded-full opacity-50 blur-3xl"></div>
-              <div className="absolute -bottom-20 -right-20 w-40 h-40 bg-purple-100 rounded-full opacity-50 blur-3xl"></div>
-            </div>
-
-            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
-              <div className="md:w-2/3">
-                <h2 className="text-3xl font-bold text-gray-800 mb-4">
-                  Ready to Transform Your Learning?
-                </h2>
-                <p className="text-lg text-gray-600">
-                  Join thousands of students already using our AI-powered
-                  platform to accelerate their education and career.
-                </p>
-              </div>
-
-              <div className="md:w-1/3 flex flex-col gap-4">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-                >
-                  Get Started Free
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="px-8 py-4 bg-white text-gray-800 font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-200"
-                >
-                  Schedule Demo
-                </motion.button>
-              </div>
-            </div>
-          </motion.div>
-
-          
 
           {/* Footer content */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
